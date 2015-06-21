@@ -9,8 +9,27 @@ var oDate = Date;
 module.exports = Dater;
 
 function Dater(year, month, day, hour, minute, second, microsecond) {
-    if (typeof year === 'number' || !year) {
-        return new oDate(Date.apply(null, arguments));
+    var argv = Array.prototype.slice.call(arguments);
+
+    if (_.isDate(year)) {
+        return new oDate(year);
+    } else if (_.isNumber(year)) {
+        switch (year.toString().length) {
+            case 2:
+                // the two digit of year, default prefix is 19
+                year = 1900 + year;
+                break;
+            case 9:
+                // the seconds of time
+                return new oDate(year * 1000);
+                break;
+            case 13:
+                // the millisecond of time
+                return new oDate(year);
+                break;
+            default:
+                break;
+        }
     } else if (_.isString(year)) {
         var date = new oDate(year);
         if (!date.isValid()) {
@@ -23,9 +42,10 @@ function Dater(year, month, day, hour, minute, second, microsecond) {
         } else {
             return date;
         }
-    } else {
-        throw TypeError('the first argument must be string or number');
     }
+
+    // if the function isn't return until now, see the default constructor
+    return new oDate(Dater.time.apply(Dater, argv));
 }
 
 function parseDate(string) {
@@ -56,5 +76,44 @@ Dater.extend = Dater.fn.extend = function() {
 Dater.fn.extend({
     isValid: function() {
         return this.toString() !== 'Invalid Date' && !isNaN(this.getDate());
+    }
+});
+
+// rewrite parse and UTC from Date to Dater
+Dater.extend({
+    // default in china
+    timezoneSecond: 8 * 3600,
+    timezoneMilliSecond: 8 * 3600000,
+
+    parse: oDate.parse,
+
+    now: oDate.now,
+
+    UTC: function() {
+        var argc = arguments.length;
+        var argv = Array.prototype.slice.call(arguments);
+
+        if (argc === 0) {
+            return this.now();
+        } else if (argc === 1) {
+            argv.push(0);
+        } else {
+            // recover javascript build in month range from (1,12) to (0,11)
+            argv[1] -= 1;
+        }
+
+        return oDate.UTC.apply(null, argv);
+    },
+
+    // like UTC function ,but this return depend on local time
+    time: function() {
+        return this.UTC.apply(this, arguments) - this.timezoneMilliSecond;
+    },
+
+    timezone: function(newTimezone) {
+        this.timezoneSecond = newTimezone * 3600;
+        this.timezoneMilliSecond = this.timezoneSecond * 1000;
+
+        return this;
     }
 });
