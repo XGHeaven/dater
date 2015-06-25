@@ -65,7 +65,7 @@ function parseDate(string) {
 }
 
 
-Dater.fn = Date.prototype;
+Dater.fn = oDate.prototype;
 Dater.Date = oDate;
 
 Dater.extend = Dater.fn.extend = function() {
@@ -107,7 +107,12 @@ Dater.extend({
 
     // like UTC function ,but this return depend on local time
     time: function() {
-        return this.UTC.apply(this, arguments) - this.timezoneMilliSecond;
+        if (arguments.length === 0) {
+            // if invoke without any argument return now timestamp
+            return this.now();
+        } else {
+            return this.UTC.apply(this, arguments) - this.timezoneMilliSecond;
+        }
     },
 
     timezone: function(newTimezone) {
