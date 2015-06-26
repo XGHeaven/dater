@@ -4,7 +4,12 @@
  */
 
 var _ = require('underscore');
+
+// old Date constructor
 var oDate = Date;
+
+// old Date constructor instance and used inner
+var createTime = new oDate();
 
 module.exports = Dater;
 
@@ -67,6 +72,7 @@ function parseDate(string) {
 
 Dater.fn = oDate.prototype;
 Dater.Date = oDate;
+Dater.createTime = createTime;
 
 Dater.extend = Dater.fn.extend = function() {
     _.extend.apply(null, _.union([this], arguments));
@@ -81,10 +87,8 @@ Dater.fn.extend({
 
 // rewrite parse and UTC from Date to Dater
 Dater.extend({
+    timezone: createTime.getTimezoneOffset(),
     // default in china
-    timezoneSecond: 8 * 3600,
-    timezoneMilliSecond: 8 * 3600000,
-
     parse: oDate.parse,
 
     now: oDate.now,
@@ -113,12 +117,5 @@ Dater.extend({
         } else {
             return this.UTC.apply(this, arguments) - this.timezoneMilliSecond;
         }
-    },
-
-    timezone: function(newTimezone) {
-        this.timezoneSecond = newTimezone * 3600;
-        this.timezoneMilliSecond = this.timezoneSecond * 1000;
-
-        return this;
     }
 });
