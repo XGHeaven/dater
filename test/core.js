@@ -43,13 +43,13 @@ describe('new Date constructor', function() {
 
     it('pass only a 9 digit number of second', function() {
         var date = new Date(1420041600);
-        expect(date.getFullYear()).to.be.equal(2015);
+        expect(date.getFullYear()).to.be.equal(new Date.Date(2015,0).getFullYear());
         expect(date.getMonth()).to.be.equal(0);
     });
 
     it('pass only a 13 digit number of millisecond', function() {
         var date = new Date(1420041600000);
-        expect(date.getFullYear()).to.be.equal(2015);
+        expect(date.getFullYear()).to.be.equal(new Date.Date(2015,0).getFullYear());
         expect(date.getMonth()).to.be.equal(0);
     });
 
