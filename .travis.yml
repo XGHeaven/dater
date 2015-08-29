@@ -5,5 +5,9 @@ node_js:
   - "0.10"
   - "iojs"
 install:
+  - npm install istanbul -g
   - npm install
-  - npm install mocha -g
+script:
+  - npm run test-cov
+after_script:
+  - cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
