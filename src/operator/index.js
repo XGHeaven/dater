@@ -2,7 +2,7 @@
  * Created by xgheaven on 15/6/20.
  */
 
-var _ = require('underscore');
+var _ = require('lodash');
 
 function changeValue(value, pattern) {
     var match = pattern.toString().match(/^([+-]?)(\d+)/);

@@ -1,7 +1,7 @@
 // main dater file
 
 //var _ = require('utils')._;
-var _ = require('underscore');
+var _ = require('lodash');
 
 var core = require('./core');
 module.exports = core;
