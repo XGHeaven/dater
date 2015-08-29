@@ -5,4 +5,5 @@ node_js:
   - "0.10"
   - "iojs"
 install:
+  - npm install
   - npm install mocha -g
