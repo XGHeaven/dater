@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "description": "a full human utils for date",
   "main": "src",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/XGHeaven/dater.git"
+  },
   "dependencies": {
     "lodash": "^3.10.1"
   },
