@@ -3,7 +3,9 @@
  * Time 2015/06/20
  */
 
-var _ = require('underscore');
+var _ = require('lodash');
+var util = require('../util');
+var debug = require('debug')('Dater:core');
 
 // old Date constructor
 var oDate = Date;
@@ -14,17 +16,21 @@ var createTime = new oDate();
 module.exports = Dater;
 
 function Dater(year, month, day, hour, minute, second, microsecond) {
-    var argv = Array.prototype.slice.call(arguments);
+    var args = Array.prototype.slice.call(arguments);
 
-    if (_.isDate(year)) {
+    if (year instanceof oDate) {
         return new oDate(year);
-    } else if (_.isNumber(year)) {
+    }
+
+    if (typeof year === 'number' && args.length === 1) {
         switch (year.toString().length) {
             case 2:
                 // the two digit of year, default prefix is 19
                 year = 1900 + year;
+            case 4:
+                return new Date(year, 0);
                 break;
-            case 9:
+            case 10:
                 // the seconds of time
                 return new oDate(year * 1000);
                 break;
@@ -33,38 +39,45 @@ function Dater(year, month, day, hour, minute, second, microsecond) {
                 return new oDate(year);
                 break;
             default:
+                throw new Error('can\'t resolve year number ' + year);
                 break;
         }
-    } else if (_.isString(year)) {
+    }
+    if (_.isString(year) && args.length === 1) {
         var date = new oDate(year);
         if (!date.isValid()) {
             date = parseDate(year);
+            debug(date);
             if (!date) {
-                throw TypeError('can\' resolve date string ' + year);
-            } else {
-                return new Date(date);
+                throw new Error('can\' resolve date string ' + year);
             }
-        } else {
-            return date;
+            date = new Date(date);
         }
+        return date;
     }
 
     // if the function isn't return until now, see the default constructor
-    return new oDate(Dater.time.apply(Dater, argv));
+    return new oDate(Dater.time.apply(Dater, args));
 }
 
 function parseDate(string) {
-    var year, month, day, hour, minute, second, microsecond;
+    var year, month, day, hour, minute, second, millisecond;
     // "20150401" || "201504" || etc
     if (parseInt(string.slice(0,4), 10) > 1970) {
         year = parseInt(string.slice(0,4), 10) || 1970;
-        month = parseInt(string.slice(4,6), 10) || 0;
-        day = parseInt(string.slice(6,8), 10) || 0;
+        month = parseInt(string.slice(4,6), 10) || 1;
+        day = parseInt(string.slice(6,8), 10) || 1;
         hour = parseInt(string.slice(8,10), 10) || 0;
         minute = parseInt(string.slice(10,12), 10) || 0;
         second = parseInt(string.slice(12, 14), 10) || 0;
-        microsecond = parseInt(string.slice(14, 18), 10) || 0;
-        return [year,month,day].join(',') + ' ' + [hour,minute,second,microsecond].join(':');
+        millisecond = parseInt(string.slice(14, 18), 10) || 0;
+        // YYYY-MM-DDThh:mm:ss.sssZ
+        return [year,month,day].map(util.padLeftCallback()).join('-') + 'T' +
+            [hour,minute,second].map(util.padLeftCallback()).join(':') +
+            '.' + util.padLeft(millisecond,3) +
+            // timezone is 反着的
+            util.getSign(-Dater.timezone) +
+            [util.padLeft(Math.abs(Dater.timezone)), '00'].join(':');
     }
     return false;
 }
@@ -87,7 +100,8 @@ Dater.fn.extend({
 
 // rewrite parse and UTC from Date to Dater
 Dater.extend({
-    timezone: createTime.getTimezoneOffset(),
+    timezone: parseInt(createTime.getTimezoneOffset() / 60),
+    timezoneMillisecond: createTime.getTimezoneOffset() * 60000,
     // default in china
     parse: oDate.parse,
 
@@ -106,7 +120,7 @@ Dater.extend({
             argv[1] -= 1;
         }
 
-        return oDate.UTC.apply(null, argv);
+        return oDate.UTC.apply(oDate, argv);
     },
 
     // like UTC function ,but this return depend on local time
@@ -115,7 +129,7 @@ Dater.extend({
             // if invoke without any argument return now timestamp
             return this.now();
         } else {
-            return this.UTC.apply(this, arguments) - this.timezoneMilliSecond;
+            return this.UTC.apply(this, arguments) + this.timezoneMillisecond;
         }
     }
 });
