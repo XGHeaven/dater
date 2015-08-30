@@ -32,4 +32,8 @@ date.day('+1'); // change to tomorrow
 // usage like jQuery api
 ```
 
-# Thinks
+# Update
+- 0\.1\.1
+    - add some test
+    - update some file
+    - fix some bugs
