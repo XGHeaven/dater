@@ -8,7 +8,8 @@
     "url": "https://github.com/XGHeaven/dater.git"
   },
   "dependencies": {
-    "lodash": "^3.10.1"
+    "lodash": "^3.10.1",
+    "printf": "^0.2.3"
   },
   "devDependencies": {
     "blanket": "^1.1.7",

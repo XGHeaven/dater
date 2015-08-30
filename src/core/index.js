@@ -5,6 +5,7 @@
 
 var _ = require('lodash');
 var util = require('../util');
+var printf = require('printf');
 var debug = require('debug')('Dater:core');
 
 // old Date constructor
@@ -39,7 +40,8 @@ function Dater(year, month, day, hour, minute, second, microsecond) {
                 return new oDate(year);
                 break;
             default:
-                throw new Error('can\'t resolve year number ' + year);
+                // invalid date
+                return new oDate('');
                 break;
         }
     }
@@ -48,10 +50,8 @@ function Dater(year, month, day, hour, minute, second, microsecond) {
         if (!date.isValid()) {
             date = parseDate(year);
             debug(date);
-            if (!date) {
-                throw new Error('can\' resolve date string ' + year);
-            }
-            date = new Date(date);
+            if (!date) { return new oDate('') }
+            date = new oDate(date);
         }
         return date;
     }
@@ -72,9 +72,7 @@ function parseDate(string) {
         second = parseInt(string.slice(12, 14), 10) || 0;
         millisecond = parseInt(string.slice(14, 18), 10) || 0;
         // YYYY-MM-DDThh:mm:ss.sssZ
-        return [year,month,day].map(util.padLeftCallback()).join('-') + 'T' +
-            [hour,minute,second].map(util.padLeftCallback()).join(':') +
-            '.' + util.padLeft(millisecond,3) +
+        return printf('%04d-%02d-%02dT%02d:%02d:%02d.%03d', year, month, day, hour, minute, second, millisecond) +
             // timezone is 反着的
             util.getSign(-Dater.timezone) +
             [util.padLeft(Math.abs(Dater.timezone)), '00'].join(':');
