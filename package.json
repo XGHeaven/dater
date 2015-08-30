@@ -8,14 +8,22 @@
     "url": "https://github.com/XGHeaven/dater.git"
   },
   "dependencies": {
-    "underscore": "^1.8.3"
+    "lodash": "^3.10.1",
+    "printf": "^0.2.3",
+    "require-dir": "^0.3.0"
   },
   "devDependencies": {
     "blanket": "^1.1.7",
-    "chai": "^3.0.0"
+    "chai": "^3.0.0",
+    "coveralls": "^2.11.4",
+    "debug": "^2.2.0",
+    "mocha": "^2.2.5",
+    "mocha-lcov-reporter": "0.0.2"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha",
+    "debug-test": "DEBUG=Dater:* mocha",
+    "test-cov": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly"
   },
   "config": {
     "blanket": {

@@ -1,8 +1,9 @@
 /**
  * Created by xgheaven on 15/6/20.
+ * like day(), month(), etc...
  */
 
-var _ = require('underscore');
+var _ = require('lodash');
 
 function changeValue(value, pattern) {
     var match = pattern.toString().match(/^([+-]?)(\d+)/);
@@ -21,7 +22,15 @@ function changeValue(value, pattern) {
     }
 }
 
-module.exports.fn = {
+module.exports = {
+    millisecond: function(string) {
+        if (!string) {
+            return this.getMilliseconds();
+        } else {
+            this.setMilliseconds(changeValue(this.getMilliseconds(), string));
+            return this;
+        }
+    },
 
     second: function(string) {
         if (!string) {
