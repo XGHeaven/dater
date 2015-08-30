@@ -2,19 +2,21 @@
 
 //var _ = require('utils')._;
 var _ = require('lodash');
+var require_dir = require('require-dir');
 
-var core = require('./core');
-module.exports = core;
+var dater = require('./dater');
+module.exports = dater;
 
-// like day(), month(), etc...
-load('./operator');
+_.forOwn(require_dir('fn'), function(value, key) {
+    if (_.isFunction(value)) dater.fn.extend(value.call(dater));
+    else dater.fn.extend(value);
+});
+
+load('./constant');
+load('./method');
 
 function load(path) {
-    var funcs = require(path);
-    if (funcs.fn) {
-        core.fn.extend(funcs.fn);
-    }
-    core.extend(_.omit(funcs, function(value, key, object) {
-        return key === 'fn';
-    }));
+    var extend = require(path);
+    if (_.isFunction(extend)) dater.extend(extend.call(dater));
+    else dater.extend(extend);
 }

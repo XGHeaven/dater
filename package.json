@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "lodash": "^3.10.1",
-    "printf": "^0.2.3"
+    "printf": "^0.2.3",
+    "require-dir": "^0.3.0"
   },
   "devDependencies": {
     "blanket": "^1.1.7",

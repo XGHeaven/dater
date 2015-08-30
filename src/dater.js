@@ -4,7 +4,7 @@
  */
 
 var _ = require('lodash');
-var util = require('../util');
+var util = require('./util');
 var printf = require('printf');
 var debug = require('debug')('Dater:core');
 
@@ -90,44 +90,6 @@ Dater.extend = Dater.fn.extend = function() {
     return this;
 };
 
-Dater.fn.extend({
-    isValid: function() {
-        return this.toString() !== 'Invalid Date' && !isNaN(this.getDate());
-    }
-});
-
 // rewrite parse and UTC from Date to Dater
 Dater.extend({
-    timezone: parseInt(createTime.getTimezoneOffset() / 60),
-    timezoneMillisecond: createTime.getTimezoneOffset() * 60000,
-    // default in china
-    parse: oDate.parse,
-
-    now: oDate.now,
-
-    UTC: function() {
-        var argc = arguments.length;
-        var argv = Array.prototype.slice.call(arguments);
-
-        if (argc === 0) {
-            return this.now();
-        } else if (argc === 1) {
-            argv.push(0);
-        } else {
-            // recover javascript build in month range from (1,12) to (0,11)
-            argv[1] -= 1;
-        }
-
-        return oDate.UTC.apply(oDate, argv);
-    },
-
-    // like UTC function ,but this return depend on local time
-    time: function() {
-        if (arguments.length === 0) {
-            // if invoke without any argument return now timestamp
-            return this.now();
-        } else {
-            return this.UTC.apply(this, arguments) + this.timezoneMillisecond;
-        }
-    }
 });

@@ -1,5 +1,6 @@
 /**
  * Created by xgheaven on 15/6/20.
+ * like day(), month(), etc...
  */
 
 var _ = require('lodash');
@@ -21,7 +22,7 @@ function changeValue(value, pattern) {
     }
 }
 
-module.exports.fn = {
+module.exports = {
     millisecond: function(string) {
         if (!string) {
             return this.getMilliseconds();
