@@ -16,5 +16,5 @@ function load(path) {
     }
     core.extend(_.omit(funcs, function(value, key, object) {
         return key === 'fn';
-    }))/**/;
+    }));
 }

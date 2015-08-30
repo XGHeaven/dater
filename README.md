@@ -1,6 +1,7 @@
 # Dater
 [![Build Status](https://travis-ci.org/XGHeaven/dater.svg?branch=develop)](https://travis-ci.org/XGHeaven/dater)
 [![Coverage Status](https://coveralls.io/repos/XGHeaven/dater/badge.svg?branch=develop&service=github)](https://coveralls.io/github/XGHeaven/dater?branch=develop)
+[![NPM](https://nodei.co/npm/dater.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/dater/)
 
 This is a library for date in javascript. You can use it like raw Date build in javascript.
 Even, you can use this to replace raw Date.
