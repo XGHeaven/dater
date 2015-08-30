@@ -6,10 +6,39 @@
 var Date = require('../src');
 var expect = require('chai').expect;
 var date;
+var dateArray = [1996, 4, 25, 10, 30, 40, 520];
+var newDateArray = [2015, 9, 28, 13, 33, 25, 250];
 
-describe('test operator', function() {
-    describe('in day method', function() {
-        beforeEach('init in 1996/4/25', function() {
+describe('operator', function() {
+    beforeEach(function() {
+        date = new Date(1996, 4, 25, 10, 30 ,40, 520);
+    });
+    ['year', 'month', 'day', 'hour', 'minute', 'second', 'millisecond'].forEach(function(opr, index) {
+        describe(opr + ' operator', function() {
+            var d;
+            beforeEach(function() {
+                d = new Date(date);
+            });
+
+            it('get value', function() {
+                expect(d[opr]()).to.equal(dateArray[index]);
+            });
+            it('+1', function() {
+                d[opr]('+1');
+                expect(d[opr]()).to.equal(dateArray[index] + 1);
+            });
+            it('-1', function() {
+                d[opr](-1);
+                expect(d[opr]()).to.equal(dateArray[index] - 1);
+            });
+            it('set value', function() {
+                d[opr](newDateArray[index]);
+                expect(d[opr]()).to.equal(newDateArray[index]);
+            });
+        });
+    });
+    describe('special day method', function() {
+        beforeEach(function() {
             date = new Date(1996,4,25,0,0,0);
         });
 

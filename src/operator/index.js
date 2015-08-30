@@ -22,6 +22,14 @@ function changeValue(value, pattern) {
 }
 
 module.exports.fn = {
+    millisecond: function(string) {
+        if (!string) {
+            return this.getMilliseconds();
+        } else {
+            this.setMilliseconds(changeValue(this.getMilliseconds(), string));
+            return this;
+        }
+    },
 
     second: function(string) {
         if (!string) {
